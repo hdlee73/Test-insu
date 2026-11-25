@@ -1,6 +1,7 @@
 package io.github.hdlee73.insu.ui.review
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -279,6 +280,7 @@ private fun Notice(text: String, warning: Boolean = false) {
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SourcePreview(pages: List<ImageBitmap>, page: Int, highlight: TextRow?, onSelectPage: (Int) -> Unit) {
     val bitmap = pages[page.coerceIn(0, pages.size - 1)]
