@@ -29,6 +29,8 @@ jobs:
         run: ./gradlew --no-daemon testDebugUnitTest
       - name: Assemble debug APK
         run: ./gradlew --no-daemon assembleDebug
+      - name: Check release build (R8, unsigned)
+        run: ./gradlew --no-daemon assembleRelease
       - uses: actions/upload-artifact@v4
         with:
           name: insunote-debug-apk

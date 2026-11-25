@@ -57,16 +57,29 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 GitHub에 푸시하면 **Android Debug Build** 워크플로가 테스트와 Debug APK 빌드를 실행하고, 실행 결과의 Artifacts에서 `insunote-debug-apk`를 내려받을 수 있습니다.
 
-## 릴리스 (보류)
+## 릴리스
 
-릴리스 빌드·GitHub Release 배포는 별도 지시가 있을 때 워크플로를 추가합니다. 서명 키는 저장소에 두지 않고 GitHub Secrets로만 전달합니다.
+`v*` 태그를 푸시하면 **Release** 워크플로가 테스트 → 서명된 Release APK 빌드 → 서명 검증 → GitHub Releases 업로드를 합니다. 태그는 `app/build.gradle.kts`의 `versionName`과 같아야 합니다(예: `0.1.0` → `v0.1.0`). 다음 버전은 `versionCode`를 1 올리고 `versionName`을 바꾼 뒤 태그를 붙입니다.
 
-| Secret | 용도 |
+서명 키는 저장소에 두지 않고 GitHub Secrets로만 전달합니다(Settings → Secrets and variables → Actions).
+
+| Secret | 값 |
 |---|---|
-| `INSU_KEYSTORE_BASE64` | keystore 파일(base64) → 워크플로에서 파일로 복원 후 `INSU_KEYSTORE_PATH`로 전달 |
-| `INSU_KEYSTORE_PASSWORD`, `INSU_KEY_ALIAS`, `INSU_KEY_PASSWORD` | 서명 정보 |
+| `INSU_KEYSTORE_BASE64` | keystore 파일을 base64로 바꾼 문자열 |
+| `INSU_KEYSTORE_PASSWORD` | keystore 암호 |
+| `INSU_KEY_ALIAS` | 키 별칭 (예: `insunote`) |
+| `INSU_KEY_PASSWORD` | 키 암호 (PKCS12 keystore면 keystore 암호와 같게) |
 
-`.gitignore`가 `*.jks`, `*.keystore`, `local.properties`, `keystore.properties` 등을 막고 있습니다.
+keystore 만들기 (JDK의 keytool, 한 번만):
+
+```bash
+keytool -genkeypair -v -keystore insunote-release.jks -storetype PKCS12 \
+  -alias insunote -keyalg RSA -keysize 4096 -validity 10000 \
+  -dname "CN=Lee Hyunduk, O=hdlee73, C=KR"
+base64 -w0 insunote-release.jks > keystore.b64        # macOS: base64 -i insunote-release.jks -o keystore.b64
+```
+
+> keystore 파일과 암호는 저장소 밖 안전한 곳에 반드시 백업하세요. 잃어버리면 같은 앱으로 업데이트를 배포할 수 없습니다. `.gitignore`가 `*.jks`, `*.keystore`, `keystore.properties`, `local.properties`를 막고 있습니다.
 
 ## 만든이
 
