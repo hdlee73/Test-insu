@@ -1,0 +1,29 @@
+# Gradle / build
+.gradle/
+build/
+/app/build/
+/captures
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+output-metadata.json
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+.kotlin/
+
+# 로컬 설정·인증 정보 (절대 커밋 금지)
+local.properties
+*.keystore
+*.jks
+keystore.properties
+signing.properties
+*.p12
+*.pem
+google-services.json
+.env
+.env.*
